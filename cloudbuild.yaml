@@ -4,6 +4,7 @@
 # ==============================
 
 substitutions:
+  _PROJECT_ID: innate-vigil-472406-q8
   _REGION: asia-south1
   _REPO: sample-repo
   _IMAGE: app
