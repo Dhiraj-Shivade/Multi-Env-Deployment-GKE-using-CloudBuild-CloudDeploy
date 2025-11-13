@@ -2,12 +2,13 @@ apiVersion: deploy.cloud.google.com/v1
 kind: Target
 metadata:
   name: dev
-description: "Development environment"
+  labels:
+    environment: dev
+description: "Development environment target for sample-app"
 customTarget:
   type: helm-deployer
   customTargetConfig:
     cluster:
-      name: my-gke-cluster
+      name: single-cluster
       location: asia-south1-a
     namespace: dev
-
