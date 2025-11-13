@@ -6,7 +6,7 @@
 substitutions:
   _PROJECT_ID: innate-vigil-472406-q8
   _REGION: asia-south1
-  _REPO: sample-repo
+  _REPO: projects/innate-vigil-472406-q8/locations/asia-south1/connections/multi-env-gke-deploy/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
   _IMAGE: app
   _PIPELINE: sample-pipeline
   _BUILD_ID: rel-${SHORT_SHA}
