@@ -21,8 +21,12 @@ serialPipeline:
         standard:
           verify: true
       approval:
-        required: true   # ✅ approval for stage
+        required: true
 
     - targetId: prod
       profiles: ["prod"]
       strategy:
+        standard:
+          verify: true
+      approval:
+        required: true
