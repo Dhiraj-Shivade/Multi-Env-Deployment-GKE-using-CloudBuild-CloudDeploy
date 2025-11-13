@@ -6,8 +6,9 @@
 substitutions:
   _PROJECT_ID: innate-vigil-472406-q8
   _REGION: asia-south1
-  _REPO: projects/innate-vigil-472406-q8/locations/asia-south1/connections/multi-env-gke-deploy/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
-  _IMAGE: app
+  _GIT_REPO: projects/innate-vigil-472406-q8/locations/asia-south1/connections/multi-env-gke-deploy/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
+  _AR_REPO: sample-repo
+  _IMAGE: my-app
   _PIPELINE: sample-pipeline
   _BUILD_ID: rel-${SHORT_SHA}
 
@@ -21,7 +22,7 @@ steps:
   args:
     [
       'build', '-t',
-      '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_IMAGE:${_BUILD_ID}',
+      '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_AR_REPO/$_IMAGE:${_BUILD_ID}',
       './app'
     ]
 
@@ -31,10 +32,10 @@ steps:
   args:
     [
       'push',
-      '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_IMAGE:${_BUILD_ID}'
+      '$_REGION-docker.pkg.dev/$_PROJECT_ID/$_AR_REPO/$_IMAGE:${_BUILD_ID}'
     ]
 
-# Step 3️⃣: Apply Cloud Deploy configuration (optional, if using declarative config)
+# Step 3️⃣: Apply Cloud Deploy configuration (optional)
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
   id: Apply
   entrypoint: 'gcloud'
@@ -43,7 +44,7 @@ steps:
       'deploy', 'apply',
       '--file=clouddeploy.yaml',
       '--region=$_REGION',
-      '--project=$PROJECT_ID'
+      '--project=$_PROJECT_ID'
     ]
 
 # Step 4️⃣: Wait for targets to propagate
@@ -65,11 +66,11 @@ steps:
       'deploy', 'releases', 'create', '${_BUILD_ID}',
       '--delivery-pipeline=$_PIPELINE',
       '--region=$_REGION',
-      '--images', "app=$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_IMAGE:${_BUILD_ID}",
-      '--project=$PROJECT_ID'
+      '--images', "app=$_REGION-docker.pkg.dev/$_PROJECT_ID/$_AR_REPO/$_IMAGE:${_BUILD_ID}",
+      '--project=$_PROJECT_ID'
     ]
 
-# Step 6️⃣: Promote release to Stage (optional, if auto-promotion not used)
+# Step 6️⃣: Promote to Stage
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
   id: Promote-Stage
   entrypoint: 'gcloud'
@@ -79,10 +80,10 @@ steps:
       '--delivery-pipeline=$_PIPELINE',
       '--to-target=stage',
       '--region=$_REGION',
-      '--project=$PROJECT_ID'
+      '--project=$_PROJECT_ID'
     ]
 
-# Step 7️⃣: Promote release to Prod (optional, can be manual or gated)
+# Step 7️⃣: Promote to Prod
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk:slim'
   id: Promote-Prod
   entrypoint: 'gcloud'
@@ -92,5 +93,5 @@ steps:
       '--delivery-pipeline=$_PIPELINE',
       '--to-target=prod',
       '--region=$_REGION',
-      '--project=$PROJECT_ID'
+      '--project=$_PROJECT_ID'
     ]
