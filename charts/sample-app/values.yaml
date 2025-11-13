@@ -1,0 +1,10 @@
+replicaCount: 2
+
+image:
+  repository: asia-south1-docker.pkg.dev/innate-vigil-472406-q8/sample-repo/my-app
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80

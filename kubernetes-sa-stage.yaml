@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: app-deployer
+  namespace: stage
+  annotations:
+    iam.gke.io/gcp-service-account: gke-node-access@innate-vigil-472406-q8.iam.gserviceaccount.com

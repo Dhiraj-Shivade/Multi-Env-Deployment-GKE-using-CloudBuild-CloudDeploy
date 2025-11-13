@@ -1,0 +1,25 @@
+apiVersion: deploy.cloud.google.com/v1
+kind: CustomTargetType
+metadata:
+  name: helm-deployer
+description: "Custom target type for Helm deployments"
+customActions:
+  deploy:
+    container:
+      image: gcr.io/clouddeploy/helm-deployer:latest
+      entrypoint: /bin/bash
+      args:
+        - "-c"
+        - |
+          helm upgrade --install \
+            $RELEASE_NAME charts/sample-app \
+            --namespace $CLOUD_DEPLOY_TARGET_NAMESPACE \
+            --set image.tag=$IMAGE_TAG
+  rollback:
+    container:
+      image: gcr.io/clouddeploy/helm-deployer:latest
+      entrypoint: /bin/bash
+      args:
+        - "-c"
+        - |
+          helm rollback $RELEASE_NAME

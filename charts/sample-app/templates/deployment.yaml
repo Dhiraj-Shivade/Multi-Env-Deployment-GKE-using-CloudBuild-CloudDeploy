@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sample-app.fullname" . }}
+  labels:
+    {{- include "sample-app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "sample-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "sample-app.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: app-ksa
+      containers:
+        - name: {{ include "sample-app.name" . }}
+          image: {{ include "sample-app.image" . }}
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ENVIRONMENT
+              value: {{ .Values.env | quote }}

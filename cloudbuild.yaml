@@ -1,0 +1,24 @@
+steps:
+# 1️⃣ Build image
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA', './app']
+
+# 2️⃣ Push image to Artifact Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA']
+
+# 3️⃣ Create a Cloud Deploy release automatically
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: bash
+  args:
+    - '-c'
+    - |
+      gcloud deploy releases create release-$(date +%Y%m%d-%H%M%S) \
+        --project=$PROJECT_ID \
+        --region=asia-south1 \
+        --delivery-pipeline=sample-pipeline \
+        --images=app=asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA \
+        --source=.
+
+images:
+- 'asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA'
