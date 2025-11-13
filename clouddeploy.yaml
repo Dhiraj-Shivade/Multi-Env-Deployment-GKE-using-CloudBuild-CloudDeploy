@@ -2,7 +2,14 @@ apiVersion: deploy.cloud.google.com/v1
 kind: DeliveryPipeline
 metadata:
   name: sample-pipeline
+  labels:
+    environment: multi-env
+
+source:
+  gitRepositoryLink: projects/innate-vigil-472406-q8/locations/asia-south1/connections/github-conn/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
+
 description: "Dev→Stage→Prod pipeline with approvals and rollout"
+
 serialPipeline:
   stages:
     - targetId: dev
@@ -14,12 +21,8 @@ serialPipeline:
         standard:
           verify: true
       approval:
-        required: true
+        required: true   # ✅ approval for stage
 
     - targetId: prod
       profiles: ["prod"]
       strategy:
-        standard:
-          verify: true
-      approval:
-        required: true
