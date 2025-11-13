@@ -1,24 +1,37 @@
+# ==============================
+# Cloud Build pipeline for GKE Multi-Env Deploy
+# Using Cloud Deploy (Dev → Stage → Prod)
+# ==============================
+
+substitutions:
+  _REGION: asia-south1
+  _REPO: sample-repo
+  _IMAGE: app
+  _PIPELINE: sample-pipeline
+
 steps:
-# 1️⃣ Build image
+# 1️⃣ Build Docker image
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA', './app']
+  id: Build
+  args:
+    - 'build'
+    - '-t'
+    - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_IMAGE:$SHORT_SHA'
+    - './app'
 
 # 2️⃣ Push image to Artifact Registry
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA']
+  id: Push
+  args:
+    - 'push'
+    - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_IMAGE:$SHORT_SHA'
 
-# 3️⃣ Create a Cloud Deploy release automatically
+# 3️⃣ Create a Cloud Deploy release (auto-triggers deployment)
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  id: Deploy
   entrypoint: bash
   args:
     - '-c'
     - |
-      gcloud deploy releases create release-$(date +%Y%m%d-%H%M%S) \
-        --project=$PROJECT_ID \
-        --region=asia-south1 \
-        --delivery-pipeline=sample-pipeline \
-        --images=app=asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA \
-        --source=.
-
-images:
-- 'asia-south1-docker.pkg.dev/$PROJECT_ID/sample-repo/app:$SHORT_SHA'
+      echo "🚀 Creating Cloud Deploy release..."
+      gcloud deploy releases create release-$(date +%Y%m%d-%H%M%S)
