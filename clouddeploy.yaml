@@ -13,9 +13,13 @@ serialPipeline:
       strategy:
         standard:
           verify: true
+      approval:
+        required: true
 
     - targetId: prod
       profiles: ["prod"]
       strategy:
         standard:
           verify: true
+      approval:
+        required: true
