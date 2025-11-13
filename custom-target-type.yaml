@@ -3,36 +3,10 @@ kind: CustomTargetType
 metadata:
   name: helm-deployer
 description: "Custom target type for Helm deployments using Cloud Deploy"
-customActions:
-  deploy:
-    container:apiVersion: deploy.cloud.google.com/v1
-kind: CustomTargetType
-metadata:
-  name: helm-deployer
-description: "Custom target type for Helm deployments using Cloud Deploy"
-customActions:
-  deploy:
-    container:
-      image: gcr.io/clouddeploy/helm-deployer:latest
-      entrypoint: /bin/bash
-      args:
-        - "-c"
-        - |
-          echo "🚀 Deploying Helm release {{.Release.Name}} to namespace {{.Target.Namespace}}"
-          helm upgrade --install {{.Release.Name}} charts/sample-app \
-            --namespace {{.Target.Namespace}} \
-            --set image.repository={{.Images.app.repository}},image.tag={{.Images.app.tag}} \
-            -f charts/sample-app/values.yaml
-  rollback:
-    container:
-      image: gcr.io/clouddeploy/helm-deployer:latest
-      entrypoint: /bin/bash
-      args:
-        - "-c"
-        - |
-          echo "🔁 Rolling back Helm release {{.Release.Name}}"
-          helm rollback {{.Release.Name}}
 
+customActions:
+  deploy:
+    container:
       image: gcr.io/clouddeploy/helm-deployer:latest
       entrypoint: /bin/bash
       args:
@@ -43,6 +17,7 @@ customActions:
             --namespace {{.Target.Namespace}} \
             --set image.repository={{.Images.app.repository}},image.tag={{.Images.app.tag}} \
             -f charts/sample-app/values.yaml
+
   rollback:
     container:
       image: gcr.io/clouddeploy/helm-deployer:latest
