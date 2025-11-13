@@ -6,7 +6,7 @@ metadata:
     environment: multi-env
 
 source:
-  gitRepositoryLink: projects/innate-vigil-472406-q8/locations/asia-south1/connections/github-conn/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
+  gitRepositoryLink: projects/innate-vigil-472406-q8/locations/asia-south1/connections/multi-env-gke-deploy/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
 
 description: "Dev→Stage→Prod pipeline with approvals and rollout"
 
