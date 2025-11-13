@@ -34,7 +34,12 @@ steps:
     - '-c'
     - |
       echo "🚀 Creating Cloud Deploy release..."
-      gcloud deploy releases create release-$(date +%Y%m%d-%H%M%S)
+      gcloud deploy releases create release-$(date +%Y%m%d-%H%M%S) \
+        --project=$PROJECT_ID \
+        --region=$_REGION \
+        --delivery-pipeline=$_PIPELINE \
+        --images=$_IMAGE=$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO/$_IMAGE:$SHORT_SHA \
+        --source=.
 
 options:
-    logging: CLOUD_LOGGING_ONLY
+  logging: CLOUD_LOGGING_ONLY
