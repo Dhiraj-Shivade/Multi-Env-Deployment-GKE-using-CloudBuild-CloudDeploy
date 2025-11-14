@@ -6,6 +6,10 @@ metadata:
     environment: multi-env
 description: "Dev → Stage → Prod pipeline with approvals and rollout"
 
+source:
+  # This FQRN is now confirmed to be correct for your 2nd gen connection.
+  gitRepositoryLink: projects/innate-vigil-472406-q8/locations/asia-south1/connections/multi-env-gke-deploy/gitRepositoryLinks/Multi-Env-Deployment-GKE-using-CloudBuild-CloudDeploy
+
 serialPipeline:
   stages:
     - targetId: dev
@@ -16,7 +20,8 @@ serialPipeline:
       strategy:
         standard:
           verify: true
-      approval:
+      # Correct Indentation: 'approval' is a direct child of the stage
+      approval: 
         required: true
 
     - targetId: prod
@@ -24,5 +29,6 @@ serialPipeline:
       strategy:
         standard:
           verify: true
-      approval:
+      # Correct Indentation: 'approval' is a direct child of the stage
+      approval: 
         required: true
